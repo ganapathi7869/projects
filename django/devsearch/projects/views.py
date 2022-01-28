@@ -1,38 +1,48 @@
-import http
-import django
-from django.shortcuts import render
+
+from django.shortcuts import redirect, render
 
 # Create your views here.
 from django.http import HttpResponse
 from django.template import context
 
-projectslist=[
-    {
-        'id': '1',
-        'title': 'Ecommerce',
-        'description': 'sample description for ecommerce'
-    },
-    {
-        'id': '2',
-        'title': 'Portfolio',
-        'description': 'sample description for Portfolio'
-    },
-    {
-        'id': '3',
-        'title': 'Social Network',
-        'description': 'sample description for Social Network'
-    },
-]
+from .models import Project
+from .forms import ProjectForm
 
 def getprojects(req):
-    page='Projects'
-    number=10
-    cntxt={'page':page,'number':number,'projectslist':projectslist}
+    projs = Project.objects.all()
+    cntxt={'projs':projs}
     return render(req,'projects/projects.html',cntxt)
 
 def getproject(req,val):
-    proj=None
-    for i in projectslist:
-        if i['id'] == val:
-            proj=i
-    return render(req,'projects/single-project.html',{'project':proj})
+    proj=Project.objects.get(id=val)
+    return render(req,'projects/single-project.html',{'proj':proj})
+
+def createproject(req):
+    form = ProjectForm()
+    if req.method == 'POST':
+        form = ProjectForm(req.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('projects')
+    cntxt = {'form': form}
+    return render(req,'projects/project_form.html', cntxt)
+
+def updateproject(req,val):
+    proj = Project.objects.get(id=val)
+    form = ProjectForm(instance=proj)
+    if req.method == 'POST':
+        form = ProjectForm(req.POST, instance=proj)
+        if form.is_valid():
+            form.save()
+            return redirect('projects')
+    cntxt = {'form': form}
+    return render(req,'projects/project_form.html', cntxt)
+
+def deleteproject(req,val):
+    proj = Project.objects.get(id=val)
+    if req.method == 'POST':
+        proj.delete()
+        return redirect('projects')
+    cntxt = {'object': proj}
+    return render(req,'projects/delete_template.html', cntxt)
+    

@@ -1,7 +1,12 @@
 {% extends 'main.html' %}
 
 {% block conten %}
-    <h1>{{project.title}}</h1>
-    <br>
-    <p>{{project.description}}</p>
+    <h1>{{proj.title}}</h1>
+    <hr>
+    {% for tg in proj.tags.all %}
+        <span style="border:1px solid grey">{{tg.name}}</span>
+    {% endfor %}
+    <hr>
+
+    <p>{{proj.description}}</p>
 {% endblock conten %}
