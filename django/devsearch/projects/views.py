@@ -20,7 +20,7 @@ def getproject(req,val):
 def createproject(req):
     form = ProjectForm()
     if req.method == 'POST':
-        form = ProjectForm(req.POST)
+        form = ProjectForm(req.POST, req.FILES)
         if form.is_valid():
             form.save()
             return redirect('projects')
@@ -31,8 +31,10 @@ def updateproject(req,val):
     proj = Project.objects.get(id=val)
     form = ProjectForm(instance=proj)
     if req.method == 'POST':
-        form = ProjectForm(req.POST, instance=proj)
+        # print(req)
+        form = ProjectForm(req.POST, req.FILES, instance=proj)
         if form.is_valid():
+            # print('valid')
             form.save()
             return redirect('projects')
     cntxt = {'form': form}
