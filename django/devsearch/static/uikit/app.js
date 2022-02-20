@@ -3,11 +3,11 @@ document.addEventListener('DOMContentLoaded', function(){
   hljs.highlightAll();
 });
 
-let alertWrapper = document.querySelector('.alert')
-let alertClose = document.querySelector('.alert__close')
+let alertsWrapper = document.querySelectorAll('.alert')
+let alertsClose = document.querySelectorAll('.alert__close')
 
-if(alertWrapper){
-  alertClose.addEventListener('click', () => 
-    alertWrapper.style.display = 'none'
-  )
+for(let i=0;i<alertsClose.length;i++){
+  alertsClose[i].addEventListener('click', () => {
+    alertsWrapper[i].style.display = 'none';
+  })
 }

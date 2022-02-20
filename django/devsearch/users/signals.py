@@ -17,5 +17,15 @@ def deleteUser(sender,instance,**kwargs):
     try:    prof.user.delete()
     except: pass
 
+def updateUser(sender,instance,created,**kwargs):
+    prof = instance
+    if created == False:
+        user = prof.user
+        user.first_name = prof.name
+        user.username = prof.username
+        user.email = prof.email
+        user.save()
+
 post_save.connect(createProfile,sender=User)
 post_delete.connect(deleteUser,sender=Profile)
+post_save.connect(updateUser,sender=Profile)

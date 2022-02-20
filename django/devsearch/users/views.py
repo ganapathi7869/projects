@@ -5,7 +5,8 @@ from .models import Profile
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
-from .forms import CustomUserCreationForm
+from django.contrib.auth.decorators import login_required
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 
 def getprofiles(req):
     profs = Profile.objects.all()
@@ -19,6 +20,26 @@ def getprofile(req,val):
     cntxt = {'prof':prof,'topskills':topskills,'otherskills':otherskills}
     return render(req,'users/profile.html',cntxt)
 
+@login_required(login_url='login')
+def getaccount(req):
+    prof = req.user.profile
+    projs = prof.project_set.all()
+    skills = prof.skill_set.all()
+    cntxt = {'prof':prof, 'skills':skills,'projs':projs}
+    return render(req,'users/account.html',cntxt)
+
+@login_required(login_url='login')
+def editprofile(req):
+    prof = req.user.profile
+    if req.method == "POST":
+        form = ProfileForm(req.POST, req.FILES, instance=prof)
+        if form.is_valid():
+            form.save()
+            return redirect('account')
+    form = ProfileForm(instance=prof)
+    cntxt = {'form':form}
+    return render(req,'users/profile_form.html',cntxt)
+
 def registeruser(req):
     page='register'
     if req.method=='POST':
@@ -29,7 +50,7 @@ def registeruser(req):
             user.save()
             messages.success(req,'User was created successfully!')
             login(req,user)
-            return redirect('profiles')
+            return redirect('editprofile')
         else:
             messages.error(req,'An error has occurred while registering the user!')
     form=CustomUserCreationForm()
@@ -61,3 +82,46 @@ def logoutuser(req):
     logout(req)
     messages.info(req,"User logged out Successfully!")
     return redirect('login')
+
+@login_required(login_url='login')
+def createskill(req):
+    prof = req.user.profile
+    form = SkillForm()
+
+    if req.method == 'POST':
+        form = SkillForm(req.POST)
+        if form.is_valid():
+            skill = form.save(commit=False)
+            skill.owner = prof
+            skill.save()
+            messages.success(req,'Skill added successfully!')
+            return redirect('account')
+    cntxt = {'form':form}
+    return render(req,'users/skill_form.html',cntxt)
+
+@login_required(login_url='login')
+def updateskill(req,val):
+    prof = req.user.profile
+    skill = prof.skill_set.get(id=val)
+
+    if req.method == 'POST':
+        form = SkillForm(req.POST, instance=skill)
+        if form.is_valid():
+            form.save()
+            messages.success(req,'Skill updated successfully!')
+            return redirect('account')
+    form = SkillForm(instance=skill)
+    cntxt = {'form':form}
+    return render(req,'users/skill_form.html',cntxt)
+
+@login_required(login_url='login')
+def deleteskill(req,val):
+    prof = req.user.profile
+    skill = prof.skill_set.get(id=val)
+
+    if req.method == 'POST':
+        skill.delete()
+        messages.success(req,'Skill deleted successfully!')
+        return redirect('account')
+    cntxt = {'object':skill}
+    return render(req,'delete_template.html',cntxt)

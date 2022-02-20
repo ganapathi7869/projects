@@ -17,18 +17,22 @@ def getproject(req,val):
 
 @login_required(login_url='login')
 def createproject(req):
+    prof = req.user.profile
     form = ProjectForm()
     if req.method == 'POST':
         form = ProjectForm(req.POST, req.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('projects')
+            proj = form.save(commit=False)
+            proj.owner = prof
+            proj.save()
+            return redirect('account')
     cntxt = {'form': form}
     return render(req,'projects/project_form.html', cntxt)
 
 @login_required(login_url='login')
 def updateproject(req,val):
-    proj = Project.objects.get(id=val)
+    prof = req.user.profile
+    proj = prof.project_set.get(id=val)
     form = ProjectForm(instance=proj)
     if req.method == 'POST':
         # print(req)
@@ -36,16 +40,17 @@ def updateproject(req,val):
         if form.is_valid():
             # print('valid')
             form.save()
-            return redirect('projects')
+            return redirect('account')
     cntxt = {'form': form}
     return render(req,'projects/project_form.html', cntxt)
 
 @login_required(login_url='login')
 def deleteproject(req,val):
-    proj = Project.objects.get(id=val)
+    prof = req.user.profile
+    proj = prof.project_set.get(id=val)
     if req.method == 'POST':
         proj.delete()
-        return redirect('projects')
+        return redirect('account')
     cntxt = {'object': proj}
-    return render(req,'projects/delete_template.html', cntxt)
+    return render(req,'delete_template.html', cntxt)
     
