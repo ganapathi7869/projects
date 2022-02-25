@@ -1,19 +1,33 @@
 
+from pyexpat.errors import messages
 from django.shortcuts import redirect, render
 
 # Create your views here.
-from .models import Project
-from .forms import ProjectForm
+from .models import Project, Review
+from .forms import ProjectForm,ReviewForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .utils import searchProjects, paginateProjects
 
 def getprojects(req):
-    projs = Project.objects.all()
-    cntxt={'projs':projs}
+    projs ,searchquery = searchProjects(req)
+    projs, customrange = paginateProjects(req,projs,6)
+    cntxt={'projs':projs,'searchquery':searchquery,'customrange':customrange}
     return render(req,'projects/projects.html',cntxt)
 
 def getproject(req,val):
     proj=Project.objects.get(id=val)
-    return render(req,'projects/single-project.html',{'proj':proj})
+    if req.method == 'POST':
+        form = ReviewForm(req.POST)
+        review = form.save(commit=False)
+        review.owner = req.user.profile
+        review.project = proj
+        review.save()
+        proj.updatevotes()
+        messages.success(req,'Your review was successfully submitted!')
+        return redirect('project',val=proj.id)
+    form = ReviewForm()
+    return render(req,'projects/single-project.html',{'proj':proj,'form':form})
 
 @login_required(login_url='login')
 def createproject(req):

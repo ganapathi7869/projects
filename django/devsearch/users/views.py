@@ -6,11 +6,13 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm, ProfileForm, SkillForm
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm, MessageForm
+from .utils import searchProfiles,paginateProfiles
 
 def getprofiles(req):
-    profs = Profile.objects.all()
-    cntxt = {"profs":profs}
+    profs, searchquery = searchProfiles(req)
+    profs, customrange = paginateProfiles(req,profs,6)
+    cntxt = {"profs":profs,'searchquery':searchquery,'customrange':customrange}
     return render(req,'users/profiles.html',cntxt)
 
 def getprofile(req,val):
@@ -52,6 +54,7 @@ def registeruser(req):
             login(req,user)
             return redirect('editprofile')
         else:
+            print(form,req)
             messages.error(req,'An error has occurred while registering the user!')
     form=CustomUserCreationForm()
     cntxt={'form':form,'page':page}
@@ -63,7 +66,7 @@ def loginuser(req):
         return redirect('profiles')
 
     if req.method=='POST':
-        username,password = req.POST['un'],req.POST['pw']
+        username,password = req.POST['un'].lower(),req.POST['pw']
         try:
             user = User.objects.get(username=username)
         except:
@@ -74,7 +77,8 @@ def loginuser(req):
             messages.error(req,"Username (or) password is incorrect!")
         else:
             login(req,user)
-            return redirect('profiles')
+            # print(req.GET['next'])
+            return redirect(req.GET['next'] if 'next' in req.GET else 'account')
     cntxt={'page':page}
     return render(req,'users/login_register.html',cntxt)
 
@@ -125,3 +129,41 @@ def deleteskill(req,val):
         return redirect('account')
     cntxt = {'object':skill}
     return render(req,'delete_template.html',cntxt)
+
+@login_required(login_url='login')
+def getinbox(req):
+    prof = req.user.profile
+    profmessages = prof.messagesasrecipient.all()
+    unreadmessagescount = profmessages.filter(is_read=False).count()
+    cntxt = {'unreadmessagescount':unreadmessagescount,'messages':profmessages}
+    return render(req,'users/inbox.html',cntxt)
+
+@login_required(login_url='login')
+def getmessage(req,val):
+    prof = req.user.profile
+    message = prof.messagesasrecipient.get(id=val)
+    if message.is_read == False:
+        message.is_read = True
+        message.save()
+    cntxt = {'message':message}
+    return render(req,'users/message.html',cntxt)
+
+def createmessage(req,val):
+    recipient = Profile.objects.get(id=val)
+    try:    sender = req.user.profile
+    except: sender = None
+    if req.method == 'POST':
+        form = MessageForm(req.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender
+            message.recipient = recipient
+            if sender:
+                message.name = sender.name
+                message.email = sender.email
+            message.save()
+            messages.success(req,'Message sent successfully!')
+            return redirect('profile',val=recipient.id)
+    form = MessageForm()
+    cntxt = {'form':form,'recipient':recipient}
+    return render(req,'users/message_form.html',cntxt)

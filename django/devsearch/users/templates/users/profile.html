@@ -37,7 +37,9 @@
                 </li>
                 {% endif %}
               </ul>
-              <a href="#" class="btn btn--sub btn--lg">Send Message </a>
+              {% if prof.id != request.user.profile.id %}
+              <a href="{% url 'createmessage' prof.id %}" class="btn btn--sub btn--lg">Send Message </a>
+              {% endif %}
             </div>
           </div>
         </div>

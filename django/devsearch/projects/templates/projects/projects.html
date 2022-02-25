@@ -2,28 +2,6 @@
 {% extends 'main.html' %}
 
 {% block conten %}
-
-    <h1>Projects</h1>
-    <table>
-        <tr>
-            <th>Project</th>
-            <th>Positive Votes</th>
-            <th>Votes</th>
-            <th>Created</th>
-        </tr>
-        {% for proj in projs %}
-            <tr>
-                <td>{{proj.title}}</td>
-                <td>{{proj.vote_ratio}}%</td>
-                <td>{{proj.vote_total}}</td>
-                <td>{{proj.created}}</td>
-                <td><a href="{% url 'updateproject' proj.id %}">Edit</a></td>
-                <td><a href="{% url 'deleteproject' proj.id %}">Delete</a></td>
-                <td><a href="{% url 'project' proj.id %}">View</a></td>
-            </tr>
-        {% endfor %}
-    </table>
-
     <main class="projects">
         <section class="hero-section text-center">
           <div class="container container--narrow">
@@ -32,10 +10,10 @@
             </div>
     
             <div class="hero-section__search">
-              <form class="form" action="#" method="get">
+              <form class="form" action="{% url 'projects' %}" method="get">
                 <div class="form__field">
                   <label for="formInput#search">Search By Projects </label>
-                  <input class="input input--text" id="formInput#search" type="text" name="text"
+                  <input class="input input--text" id="formInput#search" type="text" name="search_query" value="{{searchquery}}"
                     placeholder="Search by Project Title" />
                 </div>
     
@@ -77,6 +55,7 @@
             </div>
           </div>
         </section>
-    
+        
+        {% include 'pagination.html' with queryset=projs %}
       </main>
 {% endblock conten %}

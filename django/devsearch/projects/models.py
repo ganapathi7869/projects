@@ -1,4 +1,5 @@
 # https://drawsql.app/ganapathi7869/diagrams/dev-connect
+from enum import unique
 from django.db import models
 # Create your models here.
 import uuid
@@ -20,18 +21,35 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['-vote_ratio','-vote_total','title']      #desc: ['-created']
+
+    @property
+    def getreviewers(self):
+        reviewers = self.review_set.all().values_list('owner__id',flat=True)
+        return reviewers
+
+    def updatevotes(self):
+        self.vote_total = self.review_set.all().count()
+        positive_votes = self.review_set.filter(value='up').count()
+        self.vote_ratio = positive_votes / self.vote_total * 100 if self.vote_total else 0
+        self.save()
+
 class Review(models.Model):
     VOTE_TYPE = (
         ('up','Up Vote'),
         ('down','Down Vote')
     )
 
-    # owner
+    owner = models.ForeignKey(Profile,on_delete=models.CASCADE,null=True)
     project = models.ForeignKey(Project,on_delete=models.CASCADE)
     body = models.TextField(null=True,blank=True)
     value = models.CharField(max_length=200,choices=VOTE_TYPE)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True,editable=False)
+
+    class Meta:
+        unique_together = [['owner','project']]
 
     def __str__(self):
         return self.value
