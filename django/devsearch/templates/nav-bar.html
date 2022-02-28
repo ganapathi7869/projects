@@ -19,7 +19,7 @@
           <li class="header__menuItem"><a href="{% url 'account' %}">Account</a></li>
           <li class="header__menuItem"><a href="{% url 'logout' %}" class="btn btn--sub">Logout</a></li>
           {% else %}
-          <li class="header__menuItem"><a href="{% url 'login' %}" class="btn btn--sub">Login/Sign Up</a></li>
+          <li class="header__menuItem"><a href="{% url 'login' %}?next={{request.path}}" class="btn btn--sub">Login/Sign Up</a></li>
           {% endif %}
         </ul>
       </nav>
