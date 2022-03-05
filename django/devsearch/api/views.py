@@ -1,8 +1,9 @@
 
+from urllib import response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 from rest_framework.response import Response
-from projects.models import Project, Review
+from projects.models import Project, Review, Tag
 from . import serializers
 
 @api_view(['GET'])
@@ -48,3 +49,13 @@ def voteproject(req,val):
     proj.updatevotes()
     serializer = serializers.ProjectSerializer(proj,many=False)
     return Response(serializer.data)
+
+@api_view(['DELETE'])
+def removetag(req):
+    tagid = req.data['tagid']
+    projectid = req.data['projectid']
+
+    proj = Project.objects.get(id=projectid)
+    tag = Tag.objects.get(id=tagid)
+    proj.tags.remove(tag)
+    return Response('Tag was deleted')

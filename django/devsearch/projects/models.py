@@ -6,7 +6,7 @@ import uuid
 from users.models import Profile
 
 class Project(models.Model):
-    owner = models.ForeignKey(Profile,on_delete=models.SET_NULL,null=True,blank=True)
+    owner = models.ForeignKey(Profile,on_delete=models.CASCADE,null=True,blank=True)
     title = models.CharField(max_length=200)
     description = models.TextField(null=True,blank=True)
     featured_image = models.ImageField(null=True,blank=True, default='default.jpg')
@@ -23,6 +23,12 @@ class Project(models.Model):
 
     class Meta:
         ordering = ['-vote_ratio','-vote_total','title']      #desc: ['-created']
+
+    @property
+    def imageurl(self):
+        try:    url = self.featured_image.url
+        except: url = ''
+        return url
 
     @property
     def getreviewers(self):

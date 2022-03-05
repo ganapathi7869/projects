@@ -5,10 +5,10 @@ from django import forms
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ['title' ,'featured_image','description','demo_link','source_link','tags'] #anotherway: fields = '__all__'
-        widgets = {
-            'tags': forms.CheckboxSelectMultiple(),
-        }
+        fields = ['title' ,'featured_image','description','demo_link','source_link'] #anotherway: fields = '__all__'
+        # widgets = {
+        #     'tags': forms.CheckboxSelectMultiple(),
+        # }
 
     def __init__(self,*args,**kwargs):
         super(ProjectForm,self).__init__(*args,**kwargs)

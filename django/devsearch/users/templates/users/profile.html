@@ -8,7 +8,7 @@
         <div class="column column--1of3">
           <div class="card text-center">
             <div class="card__body dev">
-              <img class="avatar avatar--xl" src="{{prof.profile_image.url}}" />
+              <img class="avatar avatar--xl" src="{{prof.imageurl}}" />
               <h2 class="dev__name">{{prof.name}}</h2>
               <p class="dev__title">{{prof.short_intro}}</p>
               <p class="dev__location">Based in {{prof.location}}</p>
@@ -77,7 +77,7 @@
               <div class="column">
                 <div class="card project">
                   <a href="{% url 'project' proj.id %}" class="project">
-                    <img class="project__thumbnail" src="{{proj.featured_image.url}}" alt="project thumbnail" />
+                    <img class="project__thumbnail" src="{{proj.imageurl}}" alt="project thumbnail" />
                     <div class="card__body">
                       <h3 class="project__title">{{proj.title}}</h3>
                       <p><a class="project__author" href="{% url 'profile' proj.owner.id %}">By {{proj.owner.name}}</a></p>

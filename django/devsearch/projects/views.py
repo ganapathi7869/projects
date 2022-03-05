@@ -3,7 +3,7 @@ from pyexpat.errors import messages
 from django.shortcuts import redirect, render
 
 # Create your views here.
-from .models import Project, Review
+from .models import Project, Review, Tag
 from .forms import ProjectForm,ReviewForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -35,10 +35,15 @@ def createproject(req):
     form = ProjectForm()
     if req.method == 'POST':
         form = ProjectForm(req.POST, req.FILES)
+        tagnames = req.POST['addtags'].replace(',',' ').split()
         if form.is_valid():
             proj = form.save(commit=False)
             proj.owner = prof
             proj.save()
+            for tagname in tagnames:
+                tag,created = Tag.objects.get_or_create(name=tagname)
+                proj.tags.add(tag)
+            
             return redirect('account')
     cntxt = {'form': form}
     return render(req,'projects/project_form.html', cntxt)
@@ -49,13 +54,17 @@ def updateproject(req,val):
     proj = prof.project_set.get(id=val)
     form = ProjectForm(instance=proj)
     if req.method == 'POST':
-        # print(req)
         form = ProjectForm(req.POST, req.FILES, instance=proj)
+        tagnames = req.POST.get('addtags').replace(',',' ').split()
         if form.is_valid():
             # print('valid')
-            form.save()
+            proj = form.save()
+            for tagname in tagnames:
+                tag,created = Tag.objects.get_or_create(name=tagname)
+                proj.tags.add(tag)
+            
             return redirect('account')
-    cntxt = {'form': form}
+    cntxt = {'form': form ,'proj':proj}
     return render(req,'projects/project_form.html', cntxt)
 
 @login_required(login_url='login')

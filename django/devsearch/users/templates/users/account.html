@@ -9,7 +9,7 @@
     <div class="card text-center">
         <div class="card__body dev">
         <a class="tag tag--pill tag--main settings__btn" href="{% url 'editprofile' %}"><i class="im im-edit"></i> Edit</a>
-        <img class="avatar avatar--xl dev__avatar" src="{{prof.profile_image.url}}" />
+        <img class="avatar avatar--xl dev__avatar" src="{{prof.imageurl}}" />
         <h2 class="dev__name">{{prof.name}}</h2>
         <p class="dev__title">{{prof.short_intro}}</p>
         <p class="dev__location">Based in {{prof.location}}</p>
@@ -76,7 +76,7 @@
         {% for proj in projs %}
             <tr>
             <td class="settings__thumbnail">
-                <a href="{% url 'project' proj.id %}"><img src="{{proj.featured_image.url}}" alt="Project Thumbnail" /></a>
+                <a href="{% url 'project' proj.id %}"><img src="{{proj.imageurl}}" alt="Project Thumbnail" /></a>
             </td>
             <td class="settings__tableInfo">
                 <a href="{% url 'project' proj.id %}">{{proj.title}}</a>
