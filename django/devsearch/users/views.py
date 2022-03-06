@@ -135,7 +135,7 @@ def getinbox(req):
     prof = req.user.profile
     profmessages = prof.messagesasrecipient.all()
     unreadmessagescount = profmessages.filter(is_read=False).count()
-    cntxt = {'unreadmessagescount':unreadmessagescount,'messages':profmessages}
+    cntxt = {'unreadmessagescount':unreadmessagescount,'profmessages':profmessages}
     return render(req,'users/inbox.html',cntxt)
 
 @login_required(login_url='login')
