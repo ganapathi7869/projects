@@ -31,7 +31,8 @@
  Pillow(image handling), \
  White-Noise(serving static files), \
  Simple-JWT(Web Token Authentication), \
- Django-CORS-header
+ Django-CORS-header,
+ HTML, CSS, Javascript
  
  | ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/profiles1.JPG) |
  | -------- |
