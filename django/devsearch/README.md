@@ -24,9 +24,6 @@
  \
  | ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/profiles1.JPG) |
  | ---- |
- \
- \
- \
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/profiles2.JPG)
  \
  \
