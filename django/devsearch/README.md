@@ -4,6 +4,7 @@
 
 ## Features:
  ***1. Profiles:*** See other developers profile which includes their skills, projects and contact information(with pagination).
+ 
  ***2. Projects:*** See projects of all the developers at one place sorted by most rated projects first along with their tags(with pagination).
  ***3. Messaging:*** Message other developers.
  ***4. Inbox:*** See all your messages in this section with unread messages highlighted.
