@@ -19,6 +19,4 @@
  
  ***8. RESTful api(with authentication):*** User can get project details through the api. One can also give feedback for a project through this.
  
- 
- 
 ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/Inbox.JPG)
