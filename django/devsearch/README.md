@@ -11,3 +11,5 @@
  6. Authentication: User needs to be authenticated before making any changes to the database.
  7. Search: Search functionality for projects page as well as profiles page. For projects you can search with title, description, tags and owner name. For profiles you can search with name, intro and skills.
  8. RESTful api(with authentication): User can get project details through the api. One can also give feedback for a project through this.
+
+![Inbox](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/Inbox.JPG)
