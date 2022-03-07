@@ -19,41 +19,14 @@
  
  ***8. RESTful api(with authentication):*** User can get project details through the api. One can also give feedback for a project through this.
  
- \
- \
- \
  | ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/profiles1.JPG) |
  | ---- |
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/profiles2.JPG)
- \
- \
- \
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/projects1.JPG)
- \
- \
- \
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/projects2.JPG)
- \
- \
- \
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/Inbox.JPG)
- \
- \
- \
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/account1.JPG)
- \
- \
- \
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/account2.JPG)
- \
- \
- \
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/login.JPG)
- \
- \
- \
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/signup.JPG)
- \
- \
- \
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/passwordreset.JPG)
