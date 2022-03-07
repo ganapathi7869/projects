@@ -1,6 +1,6 @@
 # DevSearch - Connect With your fellow developers
 
-**Introduction:**  A Django based web application for developers to showcase their work with others. It also includes a RESTful api to query projects and give feedback for the projects through the api.
+**Introduction:**  A Django based web application for developers to showcase their work with others. It also includes a **RESTful api** to query projects and give feedback for the projects through the api.
 
 ## Features:
  ***1. Profiles:*** See other developer profiles which include their skills, projects and contact information(with pagination).
