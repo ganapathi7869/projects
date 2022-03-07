@@ -24,7 +24,14 @@
 ***10. Likes & Comments:*** User can upvote or downvote projects and also can give review for other's projects.
 
 ## Technologies used:
-Django, PostgreSql(database), Python, Django-Rest-Framework, Pillow(image handling), White-Noise(serving static files), Simple-JWT(Web Token Authentication), Django-CORS-header
+Django, 
+PostgreSql(database), 
+Python, 
+Django-Rest-Framework, 
+Pillow(image handling), 
+White-Noise(serving static files), 
+Simple-JWT(Web Token Authentication), 
+Django-CORS-header
  
  | ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/profiles1.JPG) |
  | -------- |
