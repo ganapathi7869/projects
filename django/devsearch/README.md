@@ -19,6 +19,8 @@
  
  ***8. RESTful api(with authentication):*** User can get project details through the api. One can also give feedback for a project through this.
  
+ ***9. Gmail:*** Sending mail to reset password and also to send welcome note after registering. 
+ 
  | ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/profiles1.JPG) |
  | -------- |
  ![](https://github.com/ganapathi7869/projects/blob/main/django/devsearch/static/images/demo/profiles2.JPG)
