@@ -56,6 +56,7 @@ void format(){
 	h->nooffreeblocks = NUMOFBLOCKS;
 	h->nooffiles = 0;
 	memset(&(h->startofmetablocks), 0, NUMOFBLOCKS);
+	(&(h->startofmetablocks))[0] = 1;
 	writetoblock((char *)h, 0);
 	free(h);
 }
@@ -95,7 +96,7 @@ unsigned int *getfreeblocks(unsigned int reqblocks){
 	unsigned int count = 0, i = 0;
 	while (count<reqblocks){
 		if ((&(h->startofmetablocks))[i] == 0) {
-			blocks[count++] = i + 1; // bug
+			blocks[count++] = i;
 		}
 		i++;
 	}
@@ -197,10 +198,10 @@ void deletefile(char *file){
 	for (i = 0; i < nooffiles; i++){
 		if (!strcmp(files[i].filename, file)){
 			(h->nooffiles) -= 1;
-			(h->nooffreeblocks) -= files[i].noofblocks; // bug
+			(h->nooffreeblocks) += files[i].noofblocks;
 			metablocks = &(h->startofmetablocks);
 			if (files[i].noofblocks == 1){
-				metablocks[files[i].startblock] = 0; // bug
+				metablocks[files[i].startblock] = 0;
 			}
 			else{
 				metablocks[files[i].startblock] = 0;
