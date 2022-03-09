@@ -1,2 +1,5 @@
 >>fsutil file createnew harddisk.hdd 104857600
-think OS book
+1MB = 1048576
+
+
+(think OS book)
