@@ -64,7 +64,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="disk.cpp" />
     <ClCompile Include="filesystemv4.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="disk.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
