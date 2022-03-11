@@ -1,3 +1,5 @@
-﻿  filesystemv4.cpp
-e:\projects\cpp\filesystem\filesystemv4.cpp(285): warning C4018: '<' : signed/unsigned mismatch
+﻿  shell.cpp
+  filesystem.cpp
+  disk.cpp
+  Generating Code...
   filesystem.vcxproj -> E:\projects\cpp\filesystem\Debug\filesystem.exe
