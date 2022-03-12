@@ -8,7 +8,7 @@ int getfilesize(char *filename);
 int istextfile(char *filename);
 
 // Format the disk with required BLOCKSIZE.
-int format();
+int fs_format();
 
 // Validates the disk format
 int checkformatcorrectness();
@@ -20,19 +20,19 @@ void insertfiletoheader(char *target, unsigned int startblock, unsigned int reqb
 unsigned int *getfreeblocks(unsigned int reqblocks);
 
 // Copy a file from user's local to the file system(upload).
-void copyin(char *source);
+void fs_copyin(char *source);
 
 // Copy a file from file system to the user's local(download).
-void copyout(char *source, char *target);
+void fs_copyout(char *source, char *target);
 
 // Print the content of a text file.
-void cat(char *file);
+void fs_cat(char *file);
 
 // Delete a file from the file system.
-int deletefile(char *file);
+int fs_deletefile(char *file);
 
 // List all the files available in the file system
-void listfiles();
+void fs_listfiles();
 
 // Prints the content of a text file.
-void printdebuginfo();
+void fs_printdebuginfo();

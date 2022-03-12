@@ -81,34 +81,34 @@ int main(){
 			if (!strcmp(buf, "copyin")){
 				char source[50];
 				sscanf(command, "%*s \"%[^\"]", source);
-				copyin(source);
+				fs_copyin(source);
 			}
 			else if (!strcmp(buf, "copyout")){
 				char source[20], target[27] = "output-";
 				sscanf(command, "%*s \"%[^\"]", source);
 				strcat(target, source);
-				copyout(source, target);
+				fs_copyout(source, target);
 			}
 			else if (!strcmp(buf, "ls")){
-				listfiles();
+				fs_listfiles();
 			}
 			else if (!strcmp(buf, "cat")){
 				char source[20];
 				sscanf(command, "%*s \"%[^\"]", source);
-				cat(source);
+				fs_cat(source);
 			}
 			else if (!strcmp(buf, "format")){
-				if (format()) printf("SUCCESS: Format was successful!\n");
+				if (fs_format()) printf("SUCCESS: Format was successful!\n");
 				else printf("ERROR: Format was unsuccessful!\n");
 			}
 			else if (!strcmp(buf, "deletefile")){
 				char file[20];
 				sscanf(command, "%*s \"%[^\"]", file);
-				if (deletefile(file)) printf("SUCCESS: File deleted successfully!\n");
+				if (fs_deletefile(file)) printf("SUCCESS: File deleted successfully!\n");
 				else printf("ERROR: Couldn't delete file!\n");
 			}
 			else if (!strcmp(buf, "debug")){
-				printdebuginfo();
+				fs_printdebuginfo();
 			}
 			else if (!strcmp(buf, "unmount")){
 				printf("SUCCESS: Disk unmounted successfully!\n");

@@ -9,7 +9,7 @@ char MOUNTEDDISK[20];
 unsigned int BLOCKSIZE = 16 * 1024;
 
 // Get the content of a block
-char *getblock(unsigned int block){
+char *disk_read(unsigned int block){
 	FILE *hd = fopen(MOUNTEDDISK, "rb+");
 	fseek(hd, block*BLOCKSIZE, SEEK_SET);
 	char *buf = (char *)malloc(sizeof(char)*BLOCKSIZE);
@@ -19,7 +19,7 @@ char *getblock(unsigned int block){
 }
 
 // Update the content of a block
-void writetoblock(char *buf, unsigned int block){
+void disk_write(char *buf, unsigned int block){
 	FILE *hd = fopen(MOUNTEDDISK, "rb+");
 	fseek(hd, block*BLOCKSIZE, SEEK_SET);
 	fwrite(buf, sizeof(char), BLOCKSIZE, hd);

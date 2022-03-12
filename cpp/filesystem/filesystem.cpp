@@ -45,7 +45,7 @@ int istextfile(char *filename){
 }
 
 // Format the disk with required BLOCKSIZE.
-int format(){
+int fs_format(){
 	printf("Do you want to continue with the default block size: 16KB? (y/n):\n");
 	char c; scanf("%c", &c); fflush(stdin);
 	if (c == 'n') {
@@ -61,7 +61,7 @@ int format(){
 		printf("ERROR: Insufficient space in the hard disk!\n");
 		return 0;
 	}
-	struct header *h = (struct header *)getblock(0);
+	struct header *h = (struct header *)disk_read(0);
 	h->magicnumber = MAGICNUMBER;
 	h->blocksize = BLOCKSIZE;
 
@@ -69,14 +69,14 @@ int format(){
 	h->nooffiles = 0;
 	memset(&(h->startofmetablocks), 0, totalnoofblocks);
 	(&(h->startofmetablocks))[0] = 1;
-	writetoblock((char *)h, 0);
+	disk_write((char *)h, 0);
 	free(h);
 	return 1;
 }
 
 // Validates the disk format
 int checkformatcorrectness(){
-	struct header *h = (struct header *)getblock(0);
+	struct header *h = (struct header *)disk_read(0);
 	if (h->magicnumber == MAGICNUMBER) {
 		BLOCKSIZE = h->blocksize;
 	}
@@ -84,7 +84,7 @@ int checkformatcorrectness(){
 		printf("The disk format is not recognized. Do you want to format the disk? (y/n):\n");
 		char c; scanf("%c", &c); fflush(stdin);
 		if (c == 'y') {
-			if (format()) printf("SUCCESS: Format was successful!\n");
+			if (fs_format()) printf("SUCCESS: Format was successful!\n");
 			else {
 				printf("ERROR: Format was unsuccessful!\n");
 				return 0;
@@ -97,7 +97,7 @@ int checkformatcorrectness(){
 
 // Updates header with a new file
 void insertfiletoheader(char *target, unsigned int startblock, unsigned int reqblocks, unsigned int lenoffile, unsigned int *blocks){
-	struct header *h = (struct header *)getblock(0);
+	struct header *h = (struct header *)disk_read(0);
 	(h->nooffiles) += 1;
 	(h->nooffreeblocks) -= reqblocks;
 	struct file *f = &((h->files)[h->nooffiles - 1]);
@@ -108,13 +108,13 @@ void insertfiletoheader(char *target, unsigned int startblock, unsigned int reqb
 	for (unsigned int i = 0; i < reqblocks; i++){
 		(&(h->startofmetablocks))[blocks[i]] = 1;
 	}
-	writetoblock((char *)h, 0);
+	disk_write((char *)h, 0);
 	free(h);
 }
 
 // Gives list of available block numbers
 unsigned int *getfreeblocks(unsigned int reqblocks){
-	struct header *h = (struct header *)getblock(0);
+	struct header *h = (struct header *)disk_read(0);
 	unsigned int *blocks = (unsigned int *)malloc(sizeof(int)*reqblocks);
 	if (h->nooffreeblocks < reqblocks) return NULL;
 	unsigned int count = 0, i = 0;
@@ -129,7 +129,7 @@ unsigned int *getfreeblocks(unsigned int reqblocks){
 }
 
 // Copy a file from user's local to the file system(upload).
-void copyin(char *source){
+void fs_copyin(char *source){
 	unsigned int lenoffile, reqblocks, startblock;
 	FILE *src = fopen(source, "rb");
 	lenoffile = (unsigned int)getfilesize(source);
@@ -147,14 +147,14 @@ void copyin(char *source){
 	fseek(src, 0, SEEK_SET);
 	if (reqblocks == 1){
 		fread(buf, sizeof(char), BLOCKSIZE, src);
-		writetoblock(buf, startblock);
+		disk_write(buf, startblock);
 	}
 	else{
 		memcpy(buf, &blocks[1], sizeof(unsigned int)*(reqblocks - 1));
-		writetoblock(buf, startblock);
+		disk_write(buf, startblock);
 		for (unsigned int i = 1; i < reqblocks; i++){
 			fread(buf, sizeof(char), BLOCKSIZE, src);
-			writetoblock(buf, blocks[i]);
+			disk_write(buf, blocks[i]);
 		}
 	}
 	printf("SUCCESS: File copied to the disk successfully!\n");
@@ -163,8 +163,8 @@ void copyin(char *source){
 }
 
 // Copy a file from file system to the user's local(download).
-void copyout(char *source, char *target){
-	struct header *h = (struct header *)getblock(0);
+void fs_copyout(char *source, char *target){
+	struct header *h = (struct header *)disk_read(0);
 	unsigned int nooffiles = h->nooffiles, startblock, noofblocks, filelength;
 	struct file *files = h->files;
 	for (unsigned int i = 0; i < nooffiles; i++){
@@ -178,7 +178,7 @@ void copyout(char *source, char *target){
 	free(h);
 	FILE *tgt;
 	if (!(tgt = fopen(target, "wb"))) { printf("ERROR: error opening file\n"); return; }
-	char *indexblock = getblock(startblock);
+	char *indexblock = disk_read(startblock);
 	if (noofblocks == 1){
 		fwrite(indexblock, sizeof(char), filelength, tgt);
 	}
@@ -186,7 +186,7 @@ void copyout(char *source, char *target){
 		char *buf;
 		unsigned int *nextblock = (unsigned int *)indexblock;
 		for (unsigned int i = 0; i < noofblocks - 1; i++){
-			buf = getblock(nextblock[i]);
+			buf = disk_read(nextblock[i]);
 			if (i == noofblocks - 2){
 				if (filelength%BLOCKSIZE) fwrite(buf, sizeof(char), filelength%BLOCKSIZE, tgt);
 				else fwrite(buf, sizeof(char), BLOCKSIZE, tgt);
@@ -202,12 +202,12 @@ void copyout(char *source, char *target){
 }
 
 // Print the content of a text file.
-void cat(char *file){
+void fs_cat(char *file){
 	if (!istextfile(file)){
 		printf("ERROR: cat command can only be used with '.txt' files\n");
 		return;
 	}
-	struct header *h = (struct header *)getblock(0);
+	struct header *h = (struct header *)disk_read(0);
 	unsigned int nooffiles = h->nooffiles, startblock, noofblocks, filelength;
 	struct file *files = h->files;
 	for (unsigned int i = 0; i < nooffiles; i++){
@@ -219,7 +219,7 @@ void cat(char *file){
 		}
 	}
 	free(h);
-	char *indexblock = getblock(startblock);
+	char *indexblock = disk_read(startblock);
 	if (noofblocks == 1){
 		strcat(indexblock, " "); indexblock[filelength] = NULL;
 		printf("%s", indexblock);
@@ -228,7 +228,7 @@ void cat(char *file){
 		char *buf;
 		unsigned int *nextblock = (unsigned int *)indexblock;
 		for (unsigned int i = 0; i < noofblocks - 1; i++){
-			buf = getblock(nextblock[i]); strcat(buf, " ");
+			buf = disk_read(nextblock[i]); strcat(buf, " ");
 			if (i == noofblocks - 2){
 				if (filelength%BLOCKSIZE) {
 					buf[filelength%BLOCKSIZE] = NULL;
@@ -246,8 +246,8 @@ void cat(char *file){
 }
 
 // Delete a file from the file system.
-int deletefile(char *file){
-	struct header *h = (struct header *)getblock(0);
+int fs_deletefile(char *file){
+	struct header *h = (struct header *)disk_read(0);
 	unsigned int nooffiles = h->nooffiles, i;
 	struct file *files = h->files;
 	char *metablocks;
@@ -261,7 +261,7 @@ int deletefile(char *file){
 			}
 			else{
 				metablocks[files[i].startblock] = 0;
-				unsigned int *indexblock = (unsigned int *)getblock(files[i].startblock);
+				unsigned int *indexblock = (unsigned int *)disk_read(files[i].startblock);
 				for (unsigned int j = 0; j < files[i].noofblocks - 1; j++){
 					metablocks[indexblock[j]] = 0;
 				}
@@ -277,14 +277,14 @@ int deletefile(char *file){
 		printf("ERROR: no such file exists\n");
 		return 0;
 	}
-	writetoblock((char *)h, 0);
+	disk_write((char *)h, 0);
 	free(h);
 	return 1;
 }
 
 // List all the files available in the file system
-void listfiles(){
-	struct header *h = (struct header *)getblock(0);
+void fs_listfiles(){
+	struct header *h = (struct header *)disk_read(0);
 	struct file *files = h->files;
 	unsigned int nooffiles = h->nooffiles;
 	if (nooffiles == 0){
@@ -297,8 +297,8 @@ void listfiles(){
 }
 
 // Prints the content of a text file.
-void printdebuginfo(){
-	struct header *h = (struct header *)getblock(0);
+void fs_printdebuginfo(){
+	struct header *h = (struct header *)disk_read(0);
 	printf("no of files: %d       no of freeblocks: %d		BLOCKSIZE: %d KB\n", h->nooffiles, h->nooffreeblocks, (h->blocksize) / 1024);
 	for (unsigned int i = 0; i < h->nooffiles; i++){
 		printf("file-%d:  \"%s\"       filesize: %d bytes		starting block: %d		no of blocks: %d\n", i + 1, h->files[i].filename, h->files[i].filelength, h->files[i].startblock, h->files[i].noofblocks);
