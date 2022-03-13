@@ -217,7 +217,7 @@ int main(){
 			processarith(3, arg1, arg2, arg3, targetlanguage, targetlanguagelen);
 			targetlanguagelen += 1;
 		}
-		else if (!strcmp(command, "end")){
+		else if (!strcmp(command, "SUB")){
 			sscanf(line, "%*s %s %s %s", arg1, arg2, arg3);
 			char *arg = strchr(arg1, ',');
 			*arg = '\0';
