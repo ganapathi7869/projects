@@ -9,10 +9,12 @@ struct symbol{
 	unsigned int size;
 	char constval;
 };
+
 struct block{
 	char name[20];
 	unsigned int address;
 };
+
 struct targetline{
 	unsigned int lineno;
 	unsigned int opcode;
@@ -21,6 +23,7 @@ struct targetline{
 	unsigned int arg3;
 	unsigned int arg4;
 };
+
 void buildsymboltable(char *command, char * arg1, struct symbol *symboltable, unsigned int symboltablelen){
 	unsigned int address;
 	if (symboltablelen == 0) address = 0;
@@ -50,10 +53,12 @@ void buildsymboltable(char *command, char * arg1, struct symbol *symboltable, un
 		symboltable[symboltablelen].constval = (char)val;
 	}
 }
+
 void buildlabeltable(char *name, unsigned int address, struct block *labeltable, unsigned int labeltablelen){
 	strcpy(labeltable[labeltablelen].name, name);
 	labeltable[labeltablelen].address = address;
 }
+
 unsigned int getaddressofsymbol(char *name, struct symbol *symboltable, unsigned int symboltablelen){
 	if (strchr(name, '[')){
 		char *end = strchr(name, '[');
@@ -74,6 +79,7 @@ unsigned int getaddressofsymbol(char *name, struct symbol *symboltable, unsigned
 	printf("symbol not found\n");
 	exit(1);
 }
+
 unsigned int getaddressofblock(char *name, struct block *labeltable, unsigned int labeltablelen){
 	for (unsigned int ind = labeltablelen-1; ind >=0; ind--){
 		if (!strcmp(name, labeltable[ind].name)){
@@ -110,6 +116,7 @@ void processmov(char *arg1, char * arg2, struct targetline *targetlanguage, unsi
 		targetlanguage[targetlanguagelen].arg2 = ind;
 	}
 }
+
 void processarith(char opcode, char *arg1, char * arg2, char *arg3, struct targetline *targetlanguage, unsigned int targetlanguagelen){
 	targetlanguage[targetlanguagelen].lineno = targetlanguagelen + 1;
 	targetlanguage[targetlanguagelen].opcode = opcode;
@@ -117,6 +124,7 @@ void processarith(char opcode, char *arg1, char * arg2, char *arg3, struct targe
 	targetlanguage[targetlanguagelen].arg2 = arg2[0] - 'A';
 	targetlanguage[targetlanguagelen].arg3 = arg3[0] - 'A';
 }
+
 void processjump(char *arg1, struct targetline *targetlanguage, unsigned int targetlanguagelen, struct block *labeltable, unsigned int labeltablelength){
 	if (!arg1){
 		targetlanguage[targetlanguagelen].opcode = 6;
@@ -128,6 +136,7 @@ void processjump(char *arg1, struct targetline *targetlanguage, unsigned int tar
 	targetlanguage[targetlanguagelen].lineno = targetlanguagelen + 1;
 	targetlanguage[targetlanguagelen].arg1 = getaddressofblock(arg1, labeltable, labeltablelength);
 }
+
 void processif(char *arg1, char *arg2, char *arg3, struct targetline *targetlanguage, unsigned int targetlanguagelen, unsigned int *stack, unsigned int stacklen){
 	targetlanguage[targetlanguagelen].lineno = targetlanguagelen + 1;
 	targetlanguage[targetlanguagelen].opcode = 7;
@@ -143,10 +152,12 @@ void processif(char *arg1, char *arg2, char *arg3, struct targetline *targetlang
 	targetlanguage[targetlanguagelen].arg4 = 0;
 	stack[stacklen] = targetlanguagelen + 1;
 }
+
 void processelse(struct targetline *targetlanguage, unsigned int targetlanguagelen, struct block *labeltable, unsigned int labeltablelen, unsigned int *stack, unsigned int stacklen){
 	processjump(NULL, targetlanguage, targetlanguagelen, labeltable, labeltablelen);
 	stack[stacklen] = targetlanguagelen + 1;
 }
+
 void processendif(struct targetline *targetlanguage, unsigned int targetlanguagelen,  unsigned int *stack, unsigned int *stacklen){
 	unsigned int storelineno = targetlanguagelen + 1;
 	if (targetlanguage[stack[*stacklen - 1]-1].opcode == 6){
@@ -157,6 +168,7 @@ void processendif(struct targetline *targetlanguage, unsigned int targetlanguage
 	targetlanguage[stack[*stacklen - 1]-1].arg4 = storelineno;
 	*stacklen -= 1;
 }
+
 void processprint(char *arg2, struct targetline *targetlanguage, unsigned int targetlanguagelen, struct symbol *symboltable, unsigned int symboltablelen){
 	targetlanguage[targetlanguagelen].opcode = 13;
 	targetlanguage[targetlanguagelen].lineno = targetlanguagelen + 1;
@@ -171,11 +183,13 @@ void processprint(char *arg2, struct targetline *targetlanguage, unsigned int ta
 	targetlanguage[targetlanguagelen].arg1 = 1;
 	targetlanguage[targetlanguagelen].arg2 = getaddressofsymbol(arg2, symboltable, symboltablelen);
 }
+
 void processread(char *arg1, struct targetline * targetlanguage, unsigned int targetlanguagelen){
 	targetlanguage[targetlanguagelen].opcode = 14;
 	targetlanguage[targetlanguagelen].lineno = targetlanguagelen + 1;
 	targetlanguage[targetlanguagelen].arg1 = arg1[0] - 'A';
 }
+
 int main(){
 	FILE *inputfile = fopen("maximumofthreenumbers.txt", "r");
 	char line[50], command[20], arg1[20], arg2[20], arg3[20], catchnewline[2];
