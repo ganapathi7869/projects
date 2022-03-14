@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DA32EAD2-87A0-4952-AC88-28EF3DB11DA6}</ProjectGuid>
     <RootNamespace>compilergenerateopcode</RootNamespace>
-    <ProjectName>CompilerIntermediateCodeGenerator</ProjectName>
+    <ProjectName>assembler</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -65,7 +65,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CompilerIntermediateCodeGenerator.cpp" />
+    <ClCompile Include="assembler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

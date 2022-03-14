@@ -191,7 +191,7 @@ void processread(char *arg1, struct targetline * targetlanguage, unsigned int ta
 }
 
 int main(){
-	FILE *inputfile = fopen("maximumofthreenumbers.txt", "r");
+	FILE *inputfile = fopen("sampleinput_maximumofthreenumbers.txt", "r");
 	char line[50], command[20], arg1[20], arg2[20], arg3[20], catchnewline[2];
 	unsigned int stack[100];
 	struct symbol symboltable[100];
