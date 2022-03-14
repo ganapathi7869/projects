@@ -6,9 +6,6 @@
 </p>
 <br/>
 <img src="https://github.com/ganapathi7869/projects/blob/main/cpp/assembler/resources/assembler.png" alt=""/>
-<p align="center">
-  <img src="https://github.com/ganapathi7869/projects/blob/main/cpp/assembler/resources/assembler.png" alt=""/>
-</p>
 
 Generates instructions by evaluating the mnemonics (symbols) in operation field and find the value of symbol and literals to produce machine code.
 
