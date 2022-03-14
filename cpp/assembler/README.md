@@ -5,6 +5,7 @@
   <img src="https://github.com/ganapathi7869/projects/blob/main/cpp/assembler/resources/stages.png" alt=""/>
 </p>
 <br/>
+<img src="https://github.com/ganapathi7869/projects/blob/main/cpp/assembler/resources/assembler.png" alt=""/>
 <p align="center">
   <img src="https://github.com/ganapathi7869/projects/blob/main/cpp/assembler/resources/assembler.png" alt=""/>
 </p>
