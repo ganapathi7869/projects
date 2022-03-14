@@ -1,7 +1,10 @@
 # Assembler
 
-**Introduction:**  A single pass Assembly compiler used in process of compilation takes low level assembly language as input and converts it into relocatable machine code and generating along information for the loader.\
+**Introduction:**  A single pass Assembly compiler used in process of compilation takes low level assembly language as input and converts it into relocatable machine code and generating along information for the loader.
 ![](https://github.com/ganapathi7869/projects/blob/main/cpp/assembler/resources/stages.png)
+<p align="center">
+  <img src="https://github.com/ganapathi7869/projects/blob/main/cpp/assembler/resources/stages.png" alt=""/>
+</p>
 ![](https://github.com/ganapathi7869/projects/blob/main/cpp/assembler/resources/assembler.png)
 
 Generates instructions by evaluating the mnemonics (symbols) in operation field and find the value of symbol and literals to produce machine code.
